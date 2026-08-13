@@ -1,0 +1,9 @@
+{
+  "num_samples": 10,
+  "accuracy": 0.5,
+  "precision": 0.5,
+  "recall": 1.0,
+  "f1_score": 0.6666666666666666,
+  "avg_latency_ms": 37.807321548461914,
+  "p95_latency_ms": 60.083568096160874
+}

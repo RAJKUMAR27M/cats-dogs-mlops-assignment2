@@ -1,0 +1,39 @@
+stages:
+  preprocess:
+    cmd: python scripts/preprocess_data.py
+    deps:
+      - scripts/preprocess_data.py
+      - src/data/preprocess.py
+      - data/raw
+    params:
+      - data
+      - train_split
+      - val_split
+    outs:
+      - data/processed
+
+  train:
+    cmd: python src/models/train.py
+    deps:
+      - src/models/train.py
+      - src/models/cnn_model.py
+      - src/data/preprocess.py
+      - data/processed
+    params:
+      - img_size
+      - batch_size
+      - epochs
+      - learning_rate
+      - dropout_rate
+      - patience
+      - experiment_name
+    outs:
+      - artifacts/model/model.pt
+    metrics:
+      - artifacts/metrics.json:
+          cache: false
+    plots:
+      - artifacts/training_curves.png:
+          cache: false
+      - artifacts/confusion_matrix.png:
+          cache: false

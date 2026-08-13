@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Data (tracked by DVC)
+data/raw/
+data/processed/
+
+# Model artifacts (tracked by DVC)
+artifacts/model/*.h5
+artifacts/model/*.pb
+artifacts/model/*.pkl
+artifacts/model/saved_model/
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Logs
+logs/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Secrets
+.env
+.env.local
+kaggle.json
+
+# Test artifacts
+.pytest_cache/
+test-results.xml
+.coverage
+htmlcov/
+
+# DVC store
+dvc_store/
+
+# Submission outputs
+submission.zip
+submission_report.docx

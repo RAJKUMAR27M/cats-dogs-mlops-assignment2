@@ -1,0 +1,5 @@
+{
+  "test_accuracy": 0.5,
+  "train_accuracy": 0.6125,
+  "val_accuracy": 0.6
+}

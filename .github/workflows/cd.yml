@@ -1,0 +1,75 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to deploy'
+        required: false
+        default: 'latest'
+
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/cats-dogs-api
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' ||
+      github.event_name == 'workflow_dispatch'
+
+    environment:
+      name: production
+      url: http://localhost:8000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: |
+          TAG="${{ github.event.inputs.image_tag || 'latest' }}"
+          echo "DEPLOY_IMAGE=${{ env.DOCKER_IMAGE }}:${TAG}" >> $GITHUB_ENV
+
+      - name: Pull latest image
+        run: docker pull ${{ env.DEPLOY_IMAGE }}
+
+      - name: Deploy with Docker Compose
+        env:
+          DOCKER_IMAGE: ${{ env.DEPLOY_IMAGE }}
+        run: docker compose up -d --remove-orphans
+
+      - name: Wait for service to become healthy
+        run: |
+          echo "Waiting for service..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+              echo "Service is healthy after ${i}×5s"
+              break
+            fi
+            echo "Attempt $i/30 – retrying in 5s..."
+            sleep 5
+          done
+
+      - name: Set up Python for smoke tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install test dependencies
+        run: pip install requests Pillow
+
+      - name: Run smoke tests
+        run: python scripts/smoke_test.py --base-url http://localhost:8000
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Smoke tests failed – rolling back..."
+          docker compose down
+          echo "Service stopped. Manual investigation required."

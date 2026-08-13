@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  api:
+    image: ${DOCKER_IMAGE:-cats-dogs-api:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cats-dogs-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts:ro   # mount trained model
+      - ./logs:/app/logs
+    environment:
+      - MODEL_PATH=/app/artifacts/model/model.pt
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - mlops-net
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - api
+    networks:
+      - mlops-net
+
+networks:
+  mlops-net:
+    driver: bridge

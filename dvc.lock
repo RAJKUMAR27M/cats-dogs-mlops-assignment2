@@ -1,0 +1,77 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python scripts/preprocess_data.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 16f982c87e9f861e4a0e6c9efbc6f985.dir
+      size: 200465
+      nfiles: 100
+    - path: scripts/preprocess_data.py
+      hash: md5
+      md5: e602d8da85388242e9bf075b56291ffa
+      size: 1177
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: c1c7d05190127d8f51b61f409b394fc7
+      size: 4304
+    params:
+      params.yaml:
+        data:
+          raw_dir: data/raw
+          processed_dir: data/processed
+        train_split: 0.8
+        val_split: 0.1
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: c259449c79d5b9cfdde41c607ff7de64.dir
+      size: 200465
+      nfiles: 100
+  train:
+    cmd: python src/models/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: c259449c79d5b9cfdde41c607ff7de64.dir
+      size: 200465
+      nfiles: 100
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: c1c7d05190127d8f51b61f409b394fc7
+      size: 4304
+    - path: src/models/cnn_model.py
+      hash: md5
+      md5: 4eb6008acf743bcc75400dd5da650510
+      size: 1476
+    - path: src/models/train.py
+      hash: md5
+      md5: 8698582a010500cdde1a71299b3136e1
+      size: 10235
+    params:
+      params.yaml:
+        batch_size: 32
+        dropout_rate: 0.25
+        epochs: 20
+        experiment_name: cats-dogs-classification
+        img_size: 224
+        learning_rate: 0.001
+        patience: 5
+    outs:
+    - path: artifacts/confusion_matrix.png
+      hash: md5
+      md5: ba3e4b593d7a720df480b65a8814e8b6
+      size: 26064
+    - path: artifacts/metrics.json
+      hash: md5
+      md5: ce77d4f9d45a3e861a7d6e4b6722d1a9
+      size: 81
+    - path: artifacts/model/model.pt
+      hash: md5
+      md5: c0b2ceef90fc932d2936f38ef6d8b8b5
+      size: 5258249
+    - path: artifacts/training_curves.png
+      hash: md5
+      md5: 1f441f19858f79cdec08a93a888cb374
+      size: 88115
