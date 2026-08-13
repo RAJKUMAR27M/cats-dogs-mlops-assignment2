@@ -66,6 +66,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # ADD THIS STEP TO PULL YOUR MODELS VIA DVC
+      - name: Pull data and models with DVC
+        run: dvc pull
+        
       - name: Run smoke tests
         run: python scripts/smoke_test.py --base-url http://localhost:8000
 
