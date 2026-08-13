@@ -68,10 +68,6 @@ jobs:
           # Force a compatible pathspec version for DVC 3.56.0
           pip install "pathspec<1.0.0"
 
-      # ADD THIS STEP TO PULL YOUR MODELS VIA DVC
-      - name: Pull data and models with DVC
-        run: dvc pull --force
-
       - name: Run smoke tests
         run: python scripts/smoke_test.py --base-url http://localhost:8000
 
