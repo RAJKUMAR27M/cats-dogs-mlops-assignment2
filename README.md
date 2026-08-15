@@ -17,10 +17,7 @@ cats-dogs-mlops/
 │   ├── download_data.py     # Kaggle dataset download
 │   ├── preprocess_data.py   # DVC stage helper
 │   ├── smoke_test.py        # Post-deploy smoke tests
-│   ├── batch_evaluate.py    # M5 performance tracking
-│   ├── create_submission.py # Build submission zip
-│   ├── generate_report.py   # Build DOCX submission report
-│   └── setup.bat            # Windows one-click setup
+│   └── batch_evaluate.py    # M5 performance tracking
 ├── src/
 │   ├── data/preprocess.py   # Image loading, normalisation, split logic
 │   └── models/
