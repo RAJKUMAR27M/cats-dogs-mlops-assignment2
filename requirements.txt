@@ -40,5 +40,5 @@ requests==2.32.3
 python-dotenv==1.0.1
 
 # Development
-black==26.5.1
-pathspec>=1.0.0
+black==24.3.0
+pathspec<1.0.0

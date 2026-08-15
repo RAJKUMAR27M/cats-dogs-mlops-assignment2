@@ -194,7 +194,7 @@ docker build -t cats-dogs-api:latest .
 
 ```bash
 # Start API + Prometheus
-docker compose up -d
+docker compose up -d --force-recreate
 
 # Check status
 docker compose ps

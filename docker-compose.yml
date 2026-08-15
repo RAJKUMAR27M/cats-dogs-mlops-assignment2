@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     image: ${DOCKER_IMAGE:-cats-dogs-api:latest}
