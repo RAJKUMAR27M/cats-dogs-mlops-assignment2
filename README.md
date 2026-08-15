@@ -194,7 +194,10 @@ docker build -t cats-dogs-api:latest .
 
 ```bash
 # Start API + Prometheus
-docker compose up -d --force-recreate
+docker rm -f cats-dogs-api
+docker container prune
+    ### Type y when prompted to confirm
+docker compose up -d
 
 # Check status
 docker compose ps
@@ -210,10 +213,10 @@ docker compose logs -f api
 curl http://localhost:8000/health
 
 # Predict (replace with real image path)
-curl -X POST http://localhost:8000/predict -F "file=@cat.jpg"
+curl.exe -X POST http://localhost:8000/predict -F "file=@dog.jpg"
 
 # API stats
-curl http://localhost:8000/stats
+curl.exe http://localhost:8000/stats
 ```
 
 ---
@@ -245,18 +248,6 @@ python scripts/batch_evaluate.py --base-url http://localhost:8000
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
 kubectl rollout status deployment/cats-dogs-api
-```
-
----
-
-### 13 — Generate submission files
-
-```bash
-# DOCX report
-python scripts/generate_report.py --output submission_report.docx
-
-# Zip (excludes data/artifacts to stay < 10 MB)
-python scripts/create_submission.py --output submission.zip
 ```
 
 ---
